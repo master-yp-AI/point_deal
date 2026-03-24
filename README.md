@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 观点交易所 (Opinion Exchange)
 
-## Getting Started
+一个将「观点」变为可交易资产的概念验证 Demo。用户可以像炒股一样买卖观点，参与结构化辩论，用积分押注立场。
 
-First, run the development server:
+## 功能概览
+
+- **观点行情** — 浏览热门观点，查看实时价格走势（Sparkline），按热度/涨跌/最新排序
+- **观点详情** — Canvas 绘制价格走势图，快速买入/卖出面板
+- **辩论场** — 正方 vs 反方的结构化辩论，支持积分押注和赔率展示
+- **辩论室** — 实时聊天界面，选择立场后发言，支持 AI 分身上场
+- **个人中心** — 持仓管理、收益统计、排行榜
+
+## 技术栈
+
+- **Next.js 16** (App Router)
+- **React 19** + TypeScript
+- **Tailwind CSS 4**
+- **HTML Canvas** 绘制图表
+
+## 快速开始
 
 ```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 [http://localhost:3000](http://localhost:3000) 查看效果。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 项目结构
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── page.tsx              # 首页（观点行情列表）
+│   ├── opinion/[id]/page.tsx # 观点详情页
+│   ├── debate/page.tsx       # 辩论列表
+│   ├── debate/[id]/page.tsx  # 辩论室
+│   └── profile/page.tsx      # 个人中心
+├── components/
+│   ├── Navbar.tsx            # 导航栏
+│   ├── OpinionCard.tsx       # 观点卡片
+│   ├── Sparkline.tsx         # 迷你走势图（Canvas）
+│   └── TradeModal.tsx        # 交易弹窗
+└── lib/
+    ├── types.ts              # 类型定义
+    └── mock-data.ts          # Mock 数据
+```
 
-## Learn More
+## 说明
 
-To learn more about Next.js, take a look at the following resources:
+当前为前端 Demo，所有数据均为 Mock，不涉及后端服务或真实交易。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
