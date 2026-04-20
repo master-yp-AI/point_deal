@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { currentUser, leaderboard } from "@/lib/mock-data";
+import { useAuth } from "@/lib/auth-context";
+import { currentUser, leaderboard, generateUserProfile } from "@/lib/mock-data";
 
 export default function ProfilePage() {
-  const totalHoldingValue = currentUser.holdings.reduce(
+  const { user, isAuthenticated } = useAuth();
+
+  // 使用认证用户或默认用户
+  const userProfileData = isAuthenticated && user ? generateUserProfile(user) : currentUser;
+
+  const totalHoldingValue = userProfileData.holdings.reduce(
     (sum, h) => sum + h.currentPrice * h.quantity,
     0
   );
-  const totalProfit = currentUser.holdings.reduce((sum, h) => sum + h.profit, 0);
+  const totalProfit = userProfileData.holdings.reduce((sum, h) => sum + h.profit, 0);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
@@ -22,20 +28,20 @@ export default function ProfilePage() {
             className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
             style={{ background: "var(--bg-secondary)", border: "2px solid var(--border)" }}
           >
-            {currentUser.avatar}
+            {userProfileData.avatar}
           </div>
           <div>
-            <h1 className="text-xl font-bold">{currentUser.name}</h1>
+            <h1 className="text-xl font-bold">{userProfileData.name}</h1>
             <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-secondary)" }}>
               <span>全站排名</span>
               <span className="font-mono font-bold" style={{ color: "var(--accent-blue)" }}>
-                #{currentUser.rank}
+                #{userProfileData.rank}
               </span>
-              <span className="badge badge-gold">Top {(100 - currentUser.percentile).toFixed(1)}%</span>
+              <span className="badge badge-gold">Top {(100 - userProfileData.percentile).toFixed(1)}%</span>
             </div>
           </div>
           <div className="ml-auto flex gap-2">
-            {currentUser.badges.map((badge) => (
+            {userProfileData.badges.map((badge) => (
               <span key={badge} className="badge badge-purple">{badge}</span>
             ))}
           </div>
@@ -44,11 +50,11 @@ export default function ProfilePage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-5 gap-3">
           {[
-            { label: "可用积分", value: currentUser.balance.toLocaleString(), color: "var(--accent-gold)", icon: "💰" },
-            { label: "总收益", value: `+${currentUser.totalProfit.toLocaleString()}`, color: "var(--accent-green)", icon: "📈" },
+            { label: "可用积分", value: userProfileData.balance.toLocaleString(), color: "var(--accent-gold)", icon: "💰" },
+            { label: "总收益", value: `+${userProfileData.totalProfit.toLocaleString()}`, color: "var(--accent-green)", icon: "📈" },
             { label: "持仓市值", value: totalHoldingValue.toLocaleString(), color: "var(--accent-blue)", icon: "💼" },
-            { label: "辩论胜率", value: `${Math.round((currentUser.debatesWon / currentUser.debatesTotal) * 100)}%`, color: "var(--accent-purple)", icon: "⚔️" },
-            { label: "辩论 W/L", value: `${currentUser.debatesWon}/${currentUser.debatesTotal}`, color: "var(--text-primary)", icon: "🏆" },
+            { label: "辩论胜率", value: `${Math.round((userProfileData.debatesWon / userProfileData.debatesTotal) * 100)}%`, color: "var(--accent-purple)", icon: "⚔️" },
+            { label: "辩论 W/L", value: `${userProfileData.debatesWon}/${userProfileData.debatesTotal}`, color: "var(--text-primary)", icon: "🏆" },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -75,7 +81,7 @@ export default function ProfilePage() {
         >
           <h3 className="font-bold mb-4">💼 我的持仓</h3>
           <div className="flex flex-col gap-2">
-            {currentUser.holdings.map((holding) => {
+            {userProfileData.holdings.map((holding) => {
               const isUp = holding.profit >= 0;
               return (
                 <Link key={holding.opinionId} href={`/opinion/${holding.opinionId}`}>
@@ -130,7 +136,7 @@ export default function ProfilePage() {
           <h3 className="font-bold mb-4">🏆 观点身价排行</h3>
           <div className="flex flex-col gap-2">
             {leaderboard.map((entry) => {
-              const isMe = entry.name === currentUser.name;
+              const isMe = entry.name === userProfileData.name;
               return (
                 <div
                   key={entry.rank}

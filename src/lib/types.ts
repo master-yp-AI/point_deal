@@ -76,3 +76,18 @@ export interface LeaderboardEntry {
   winRate: number;
   badge?: string;
 }
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  avatar: string;
+  passwordHash: string;
+  createdAt: string;
+  balance: number;
+}
+
+export interface AuthState {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+}

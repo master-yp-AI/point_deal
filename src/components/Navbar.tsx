@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
   { href: "/", label: "行情", icon: "📊" },
@@ -11,6 +12,7 @@ const navItems = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <nav
@@ -47,14 +49,37 @@ export default function Navbar() {
           })}
         </div>
 
-        <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm"
-          style={{ background: "var(--bg-secondary)" }}
-        >
-          <span>💰</span>
-          <span className="font-mono font-bold" style={{ color: "var(--accent-blue)" }}>
-            1,580
-          </span>
+        <div className="flex items-center gap-3">
+          {isAuthenticated && user ? (
+            <>
+              {/* 用户积分 */}
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm"
+                style={{ background: "var(--bg-secondary)" }}
+              >
+                <span>💰</span>
+                <span className="font-mono font-bold" style={{ color: "var(--accent-blue)" }}>
+                  {user.balance.toLocaleString()}
+                </span>
+              </div>
+
+              {/* 用户信息 */}
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{user.avatar}</span>
+                <span className="text-sm font-medium hidden sm:block">{user.name}</span>
+                <button
+                  onClick={logout}
+                  className="btn btn-outline text-sm py-1.5 px-3"
+                >
+                  退出
+                </button>
+              </div>
+            </>
+          ) : (
+            <Link href="/login" className="btn btn-primary">
+              登录
+            </Link>
+          )}
         </div>
       </div>
     </nav>

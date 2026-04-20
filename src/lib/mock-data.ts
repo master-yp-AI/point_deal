@@ -1,4 +1,4 @@
-import { Opinion, Debate, UserProfile, LeaderboardEntry } from "./types";
+import { Opinion, Debate, UserProfile, LeaderboardEntry, AuthUser } from "./types";
 
 function generatePriceHistory(base: number, length: number = 30): number[] {
   const history: number[] = [];
@@ -271,3 +271,39 @@ export const leaderboard: LeaderboardEntry[] = [
   { rank: 9, name: "数据说话", avatar: "📊", value: 11200, winRate: 67 },
   { rank: 10, name: "观点猎人", avatar: "🎯", value: 9800, winRate: 66 },
 ];
+
+// 根据 AuthUser 生成 UserProfile
+export function generateUserProfile(authUser: AuthUser): UserProfile {
+  return {
+    name: authUser.name,
+    avatar: authUser.avatar,
+    balance: authUser.balance,
+    totalProfit: Math.round(authUser.balance * 0.8),
+    rank: Math.floor(Math.random() * 500) + 1,
+    totalUsers: 5200,
+    percentile: Math.round((1 - authUser.balance / 30000) * 100 * 10) / 10,
+    debatesWon: Math.floor(Math.random() * 20),
+    debatesTotal: Math.floor(Math.random() * 30) + 5,
+    holdings: [
+      {
+        opinionId: "op-1",
+        opinionContent: "AI将在5年内取代80%的初级程序员岗位",
+        buyPrice: 42,
+        currentPrice: 67,
+        quantity: 5,
+        profit: 125,
+        profitPercent: 59.5,
+      },
+      {
+        opinionId: "op-3",
+        opinionContent: "比特币2027年底将突破50万美元",
+        buyPrice: 78,
+        currentPrice: 89,
+        quantity: 3,
+        profit: 33,
+        profitPercent: 14.1,
+      },
+    ],
+    badges: ["🔥 新手上路", "📈 开始交易"],
+  };
+}
